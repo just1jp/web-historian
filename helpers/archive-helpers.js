@@ -2,13 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 
-/*
- * You will need to reuse the same paths many times over in the course of this sprint.
- * Consider using the `paths` object below to store frequently used file paths. This way,
- * if you move any files, you'll only need to change your code in one place! Feel free to
- * customize it in any way you wish.
- */
+// Storage of websites that need to be archived or are already archived
+var archivedSites = [];
 
+// Helpers to simplify writing file path
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
@@ -22,10 +19,16 @@ exports.initialize = function(pathsObj) {
   });
 };
 
-// The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
 
 exports.readListOfUrls = function() {
+  fs.readFile('./archives/sites.txt', 'utf-8', function(err, data) {
+    if (err) {
+      throw err;
+    }
+    archivedSites = data.split('url=');
+    archivedSites.shift();
+  });
+  return archivedSites;
 };
 
 exports.isUrlInList = function() {
@@ -39,3 +42,26 @@ exports.isUrlArchived = function() {
 
 exports.downloadUrls = function() {
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
