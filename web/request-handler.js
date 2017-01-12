@@ -15,8 +15,6 @@ var statusCode = 200;
 
 var requestType = {
   'GET': function(req, res) {
-    // Retrieve and render index.html for the client
-    archive.readListOfUrls();
     fs.readFile(archive.paths.siteAssets + '/index.html', 'utf-8', function(err, data) {
       if (err) {
         console.log('Error', err);
@@ -27,10 +25,8 @@ var requestType = {
     });
   },
   'POST': function(req, res) {
-
     req.on('data', function(data) {
-      //console.log('we have data', data);
-      fs.appendFile(archive.paths.list, data.toString(), 'utf-8', function(err) {
+      fs.appendFile(archive.paths.list, data.toString().replace('url=', '') + '\n', 'utf-8', function(err) {
         if (err) {
           console.log('Error', err);
         }

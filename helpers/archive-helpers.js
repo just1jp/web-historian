@@ -20,15 +20,12 @@ exports.initialize = function(pathsObj) {
 };
 
 
-exports.readListOfUrls = function() {
-  fs.readFile('./archives/sites.txt', 'utf-8', function(err, data) {
-    if (err) {
-      throw err;
-    }
-    archivedSites = data.split('url=');
-    archivedSites.shift();
+exports.readListOfUrls = function(callback) {
+  fs.readFile(exports.paths.list, 'utf-8', function(err, data) {
+    if (err) { throw err; }
+    archivedSites = data.toString().split('\n');
+    callback(err, archivedSites);
   });
-  return archivedSites;
 };
 
 exports.isUrlInList = function() {
