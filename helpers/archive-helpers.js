@@ -39,8 +39,10 @@ exports.addUrlToList = function(URL, callback) {
   URL = URL.replace('url=', '');
   exports.isUrlInList(URL, function(err, exists) {
     if (err) { throw err; }
-    if (!exists) {  
-      fs.appendFile(exports.paths.list, URL.toLowerCase() + '\n', 'utf-8', callback(err));
+    if (!exists) {
+      fs.appendFile(exports.paths.list, URL.toLowerCase() + '\n', 'utf-8', function(err) {
+        callback(err);
+      });
     }
   });
 };
