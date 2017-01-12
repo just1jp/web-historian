@@ -47,10 +47,31 @@ exports.addUrlToList = function(URL, callback) {
   });
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(url, callback) {
+  fs.access(exports.paths.archivedSites + '/' + url, function(err) {
+    err ? callback(null, false) : callback(null, true);
+  });
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urlArray) {
+  // Grab list of URLs from readListOfURLs = Array of URLs
+  for (var i = 0; i < urlArray.length; i++) {
+    (function(i) {
+      exports.isUrlArchived(urlArray[i], function(err, exists) {
+        console.log('i', urlArray[i]);
+        console.log('does it exist? ', exists);
+        // If URL is not archived, write file 
+        if (!exists) {
+          fs.writeFile(exports.paths.archivedSites + '/' + urlArray[i], '', function(err) {
+            if (err) { throw err; }
+
+          });
+        }
+      });
+    })(i);
+
+  }
+    
 };
 
 
