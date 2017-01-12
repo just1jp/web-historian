@@ -28,10 +28,21 @@ exports.readListOfUrls = function(callback) {
   });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(URL, callback) {
+  exports.readListOfUrls(function(err, data) {
+    if (err) { throw err; }
+    _.contains(data, URL.toLowerCase()) ? callback(err, true) : callback(err, false);
+  });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(URL, callback) {
+  URL = URL.replace('url=', '');
+  exports.isUrlInList(URL, function(err, exists) {
+    if (err) { throw err; }
+    if (!exists) {  
+      fs.appendFile(exports.paths.list, URL.toLowerCase() + '\n', 'utf-8', callback(err));
+    }
+  });
 };
 
 exports.isUrlArchived = function() {

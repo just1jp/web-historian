@@ -26,7 +26,7 @@ var requestType = {
   },
   'POST': function(req, res) {
     req.on('data', function(data) {
-      fs.appendFile(archive.paths.list, data.toString().replace('url=', '') + '\n', 'utf-8', function(err) {
+      archive.addUrlToList(data.toString(), function(err, data) {
         if (err) {
           console.log('Error', err);
         }
