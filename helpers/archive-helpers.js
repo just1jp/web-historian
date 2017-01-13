@@ -10,7 +10,8 @@ var archivedSites = [];
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
-  list: path.join(__dirname, '../archives/sites.txt')
+  list: path.join(__dirname, '../archives/sites.txt'), 
+  log: path.join(__dirname, '../workers/log.txt')
 };
 
 // Used for stubbing paths for tests, do not modify
@@ -62,7 +63,7 @@ exports.downloadUrls = function(urlArray) {
         // If URL is not archived, write file 
         if (!exists) {
           // Scrape the new site
-          httpHelpers.scrape(urlArray[i], function(data) {
+          httpHelpers.scrape('http://' + urlArray[i], function(data) {
             // Create the new file with scraped html
             fs.writeFile(exports.paths.archivedSites + '/' + urlArray[i], data, function(err) {
               if (err) { throw err; }

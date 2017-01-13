@@ -1,4 +1,7 @@
 var fs = require('fs');
+var htmlFetcher = require('../workers/htmlFetcher');
+
+htmlFetcher(); // invoke our cron job function
 
 // Sync is ok here because this is called just once on startup.
 module.exports = function (basePath) {
@@ -12,6 +15,13 @@ module.exports = function (basePath) {
   if (!fs.existsSync(basePath + '/sites.txt')) {
     // We use fs.openSync to create the file
     var file = fs.openSync(basePath + '/sites.txt', 'w');
+    fs.closeSync(file);
+  }
+
+  // if the file doesn't exist, create it.
+  if (!fs.existsSync('./workers/log.txt')) {
+    // We use fs.openSync to create the file
+    var file = fs.openSync('./workers/log.txt', 'w');
     fs.closeSync(file);
   }
 

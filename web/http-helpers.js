@@ -12,8 +12,8 @@ exports.headers = {
 };
 
 // Serve up our internal assets
-exports.serveAssets = function(status, res, asset) {
-  fs.readFile(archive.paths.siteAssets + '/' + asset, 'utf-8', function(err, data) {
+exports.serveAssets = function(status, res, asset, prefix) {
+  fs.readFile(prefix + '/' + asset, 'utf-8', function(err, data) {
     if (err) { throw err; }
     res.writeHead(status, exports.header);
     res.write(data);

@@ -5,10 +5,9 @@ var httpHelpers = require('./http-helpers');
 
 var requestType = {
   'GET': function(req, res) {
-    httpHelpers.serveAssets(200, res, 'index.html');
+    httpHelpers.serveAssets(200, res, 'index.html', archive.paths.siteAssets);
   },
   'POST': function(req, res) {
-
     req.on('data', function(data) {
       var searchedUrl = data.toString().replace('url=', '');
       // Need to check if the input is archived
@@ -16,13 +15,14 @@ var requestType = {
         // If it is, serve up the assets
         if (exists) {
           // TODO: Add function that serves archived site
+          httpHelpers.serveAssets(302, res, searchedUrl, archive.paths.archivedSites);
         } else {
           // If not, add UrlToList
           archive.addUrlToList(searchedUrl, function(err) {
             if (err) { throw err; }
           });
           // Serve up loading.html page
-          httpHelpers.serveAssets(302, res, 'loading.html');
+          httpHelpers.serveAssets(302, res, 'loading.html', archive.paths.siteAssets);
         }
       });
     });
