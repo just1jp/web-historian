@@ -1,5 +1,6 @@
 var path = require('path');
 var fs = require('fs');
+var http = require('http');
 var archive = require('../helpers/archive-helpers');
 
 exports.headers = {
@@ -21,6 +22,15 @@ exports.serveAssets = function(status, res, asset) {
 };
 
 // Serve up sites that are archived
-exports.scrape = function() {
-  
+exports.scrape = function(url, callback) {
+  http.get(url, function(response) {
+    var rawHTML = '';
+
+    response.on('data', function(chunk) {
+      rawHTML += chunk;
+    });
+    response.on('end', function() {
+      callback(rawHTML.toString());
+    });
+  });
 };

@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var httpHelpers = require('../web/http-helpers');
 
 // Storage of websites that need to be archived or are already archived
 var archivedSites = [];
@@ -58,12 +59,14 @@ exports.downloadUrls = function(urlArray) {
   for (var i = 0; i < urlArray.length; i++) {
     (function(i) {
       exports.isUrlArchived(urlArray[i], function(err, exists) {
-        console.log('i', urlArray[i]);
-        console.log('does it exist? ', exists);
         // If URL is not archived, write file 
         if (!exists) {
-          fs.writeFile(exports.paths.archivedSites + '/' + urlArray[i], '', function(err) {
-            if (err) { throw err; }
+          // Scrape the new site
+          httpHelpers.scrape(urlArray[i], function(data) {
+            // Create the new file with scraped html
+            fs.writeFile(exports.paths.archivedSites + '/' + urlArray[i], data, function(err) {
+              if (err) { throw err; }
+            });
 
           });
         }

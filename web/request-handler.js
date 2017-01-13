@@ -3,7 +3,6 @@ var archive = require('../helpers/archive-helpers');
 var fs = require('fs');
 var httpHelpers = require('./http-helpers');
 
-
 var requestType = {
   'GET': function(req, res) {
     httpHelpers.serveAssets(200, res, 'index.html');
