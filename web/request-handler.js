@@ -1,34 +1,29 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var fs = require('fs');
+var httpHelpers = require('./http-helpers');
 
-
-var header = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10,
-  'content-type': 'text/html'
-};
-
-var statusCode = 200;
 
 var requestType = {
   'GET': function(req, res) {
-    fs.readFile(archive.paths.siteAssets + '/index.html', 'utf-8', function(err, data) {
-      if (err) {
-        console.log('Error', err);
-      }
-      res.writeHead(statusCode, header);
-      res.write(data);
-      res.end();
-    });
+    httpHelpers.serveAssets(200, res, 'index.html');
   },
   'POST': function(req, res) {
+
     req.on('data', function(data) {
-      archive.addUrlToList(data.toString(), function(err, data) {
-        if (err) {
-          console.log('Error', err);
+      var searchedUrl = data.toString().replace('url=', '');
+      // Need to check if the input is archived
+      archive.isUrlArchived(searchedUrl, function(err, exists) {
+        // If it is, serve up the assets
+        if (exists) {
+          // TODO: Add function that serves archived site
+        } else {
+          // If not, add UrlToList
+          archive.addUrlToList(searchedUrl, function(err) {
+            if (err) { throw err; }
+          });
+          // Serve up loading.html page
+          httpHelpers.serveAssets(302, res, 'loading.html');
         }
       });
     });
@@ -39,6 +34,6 @@ var requestType = {
 };
 
 exports.handleRequest = function (req, res) {
-  console.log('Serving request type ' + req.method + ' for url ' + req.url);
+  // console.log('Serving request type ' + req.method + ' for url ' + req.url);
   requestType[req.method](req, res);
 };

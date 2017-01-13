@@ -10,12 +10,17 @@ exports.headers = {
   'Content-Type': 'text/html'
 };
 
-exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
+// Serve up our internal assets
+exports.serveAssets = function(status, res, asset) {
+  fs.readFile(archive.paths.siteAssets + '/' + asset, 'utf-8', function(err, data) {
+    if (err) { throw err; }
+    res.writeHead(status, exports.header);
+    res.write(data);
+    res.end();
+  });
 };
 
-
-
-// As you progress, keep thinking about what helper functions you can put here!
+// Serve up sites that are archived
+exports.scrape = function() {
+  
+};

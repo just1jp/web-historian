@@ -25,7 +25,7 @@ exports.readListOfUrls = function(callback) {
     if (err) { throw err; }
     archivedSites = data.toString().split('\n');
     callback(err, archivedSites);
-  });
+  }); 
 };
 
 exports.isUrlInList = function(URL, callback) {
